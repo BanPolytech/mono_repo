@@ -28,7 +28,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"AOSForceMonoRepo\\Authentication\\": "src/"
+			"AOSForceMonoRepo\\Authentication\\": "modules/authentication/src/",
+			"Database\\Seeders\\": "modules/authentication/database/seeders/"
 		}
 	},
 	"config": {

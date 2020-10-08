@@ -1,6 +1,6 @@
 <?php
 
-namespace AOSForceMonoRepo\Controllers\Auth;
+namespace AOSForceMonoRepo\Authentication\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;

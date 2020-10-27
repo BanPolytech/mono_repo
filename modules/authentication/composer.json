@@ -1,6 +1,6 @@
 {
 	"name": "modules/authentication",
-	"type": "laravel-library",
+	"type": "library",
 	"description": "An authentication repository for Laravel 6.X",
 	"minimum-stability": "dev",
 	"composer/installers": "~1.0",
@@ -9,7 +9,6 @@
 		"laravel"
 	],
 	"license": "MIT",
-	"type": "library",
 	"homepage": "https://github.com/go-aos/aos-force-mono-repo/modules/authentication",
 	"authors": [
 		{

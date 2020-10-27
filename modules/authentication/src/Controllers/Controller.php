@@ -1,6 +1,6 @@
 <?php
 
-namespace AOSForceMonoRepo\Controllers;
+namespace AOSForceMonoRepo\Authentication\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;

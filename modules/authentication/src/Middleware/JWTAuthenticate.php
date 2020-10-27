@@ -1,6 +1,6 @@
 <?php
 
-namespace AOSForceMonoRepo\Middleware;
+namespace AOSForceMonoRepo\Authentication\Middleware;
 
 use App\Models\User;
 use Closure;

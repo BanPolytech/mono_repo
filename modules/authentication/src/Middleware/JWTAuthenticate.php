@@ -42,7 +42,7 @@ class JWTAuthenticate
                 try {
                     $refreshed = JWTAuth::refresh(JWTAuth::getToken());
                     $user = JWTAuth::setToken($refreshed)->toUser();
-                    header('Authorization: Bearer ' . $refreshed);
+                    // TODO : set cookie with refreshed token
                     auth()->login($user);
                 } catch (JWTException $e) {
                     return response()->json([

@@ -10974,6 +10974,10 @@ a {
   color: #E30513;
 }
 
+.white {
+  color: #FFFFFF;
+}
+
 .background-red-50-right {
   background: linear-gradient(90deg, #FFFFFF 50%, #E30513 50%);
 }

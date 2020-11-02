@@ -18,7 +18,7 @@ const PublicLayout: React.FC = (props) => {
           </div>
           <div className="col-lg-6 text-center right-panel">
             <img src="/images/login-layout-logo.svg" alt="AOS Force" />
-            <h1>AOS Force</h1>
+            <h1 className="white">AOS Force</h1>
           </div>
         </div>
       </div>

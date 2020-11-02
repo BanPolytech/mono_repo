@@ -21,10 +21,10 @@ const RoutePath: React.FC = () => {
       <Switch>
         {/* Authentication routes */}
         <Route exact path="/" component={Home} />
-        <Route exact path="/invitation/:token" component={AcceptInvitation} />
+        <Route exact path="/invitation/:email/:token" component={AcceptInvitation} />
         <Route exact path="/connexion" component={Login} />
         <Route exact path="/identifiants-perdus" component={PasswordLost} />
-        <Route exact path="/recovery-password/:token/:email" component={RecoveryPassword} />
+        <Route exact path="/reinitialiser-identifiants/:email/:token" component={RecoveryPassword} />
 
         {/*
         <>

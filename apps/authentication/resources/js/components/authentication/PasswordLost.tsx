@@ -8,7 +8,7 @@ import Modal from '../layouts/Modal';
 export default function PasswordLost() {
   const [email, setEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(false);
+  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   function sendResetLink() {
@@ -32,11 +32,16 @@ export default function PasswordLost() {
     }
   }
 
+  const closeModal = () => {
+    setError(null);
+    setSuccess(null);
+  }
+
 
   return (
     <PublicLayout>
 
-      <Modal hidden={!error && !success} closeModal={() => setError(null)}>
+      <Modal hidden={!error && !success} closeModal={() => closeModal()}>
         {error &&
           <>
             <p className="text-center">{error}</p>

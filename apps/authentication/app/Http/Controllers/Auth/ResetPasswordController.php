@@ -3,8 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\User;
 
 class ResetPasswordController extends Controller
 {
@@ -19,12 +18,71 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    /**
+     * Validate the email of the token sent in the "reset password "request.
+     *
+     * @param string $email
+     * @param string $token
+     * @return string|App\User
+     */
+    protected function validateSession($email, $token)
+    {
+        $user = User::where('email', $email)->where('reset_token', $token)->first();
+
+        if (!$user) {
+            return trans('passwords.user');
+        }
+
+        if ($user->reset_token_at->diffInHours(now()) > 24) {
+            $user->deleteResetPassword();
+            return trans('password.request_expired');
+        }
+
+        return $user;
+    }
 
     /**
-     * Where to redirect users after resetting their password.
+     * Get an error if the request is not valid (yet) 
+     * or get the first name of the user.
      *
-     * @var string
+     * @param string $email
+     * @param string $token
+     * @return array
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function showResetData($email, $token)
+    {
+        $user = $this->validateSession($email, $token);
+
+        if ($user instanceof User === false) {
+            return ['error' => $user];
+        }
+
+        return ['success' => true, 'first_name' => $user->name];
+    }
+
+    /**
+     * Reset the password of an user if the request has been validated.
+     *
+     * @param string $email
+     * @param string $token
+     * @return array
+     */
+    public function reset($email, $token)
+    {
+        $user = $this->validateSession($email, $token);
+
+        if ($user instanceof User) {
+            request()->validate([
+                'password' => 'required|confirmed',
+                'password_confirmation' => 'required'
+            ]);
+
+            $user->update(['password' => bcrypt(request('password'))]);
+            $user->deleteResetPassword();
+
+            return ['success' => trans('passwords.password_edited')];
+        }
+
+        return ['error' => $user];
+    }
 }

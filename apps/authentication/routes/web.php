@@ -17,6 +17,6 @@ Route::get('{path}', function () {
     }
 
     return view('layouts.app');
-})->where('path', '(connexion|register|identifiants\-perdus)');
+})->where('path', '(connexion|register|identifiants\-perdus|reinitialiser\-identifiants)');
 
 Route::view('{path?}', 'layouts.app')->where('path', '.*');

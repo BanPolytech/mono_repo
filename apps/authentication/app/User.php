@@ -75,11 +75,32 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
         'reset_token_at'
     ];
 
+    /**
+     * Delete field for password resetting.
+     *
+     * @return void
+     */
+    public function deleteResetPassword()
+    {
+        $this->unset('reset_token');
+        $this->unset('reset_token_at');
+    }
+
+    /**
+     * Get the current JWT key.
+     *
+     * @return string
+     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
+    /**
+     * Get the custom JWT claims.
+     *
+     * @return array
+     */
     public function getJWTCustomClaims()
     {
         return [];

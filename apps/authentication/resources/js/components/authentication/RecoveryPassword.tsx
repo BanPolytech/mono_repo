@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
+import PublicLayout from '../layouts/PublicLayout';
+import Modal from '../layouts/Modal';
+import Loader from '../layouts/Loader';
 
 export default function RecoveryPassword() {
   const { token, email } = useParams();
@@ -13,9 +16,12 @@ export default function RecoveryPassword() {
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [requestIsValid, setRequestIsValid] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>(null);
 
   function loadRequest() {
-    axios.get(`/api/recovery-password/${token}/${email}`).then(({ data }) => {
+    setLoading(true);
+
+    axios.get(`/api/recovery-password/${email}/${token}`).then(({ data }) => {
       if (data.error) {
         setError(data.error);
         return;
@@ -23,8 +29,12 @@ export default function RecoveryPassword() {
 
       if (data.success) {
         setRequestIsValid(true);
+        setFirstName(data.first_name);
+        return;
       }
-    });
+
+      setError('Impossible de trouver cette demande.');
+    }).finally(() => setLoading(false));
   }
 
   function changePassword() {
@@ -32,12 +42,8 @@ export default function RecoveryPassword() {
     setSuccess('');
 
     if (password && passwordConfirmation) {
-      if (password !== passwordConfirmation) {
-        setError('Les mots de passe doivent être identiques !');
-        return;
-      }
       setLoading(true);
-      axios.post(`/api/recovery-password/${token}/${email}`, {
+      axios.post(`/api/recovery-password/${email}/${token}`, {
         password,
         password_confirmation: passwordConfirmation,
       }).then(({ data }) => {
@@ -48,11 +54,15 @@ export default function RecoveryPassword() {
 
         if (data.success) {
           setSuccess(data.success);
-          history.push('/login?success=true');
         }
       })
         .finally(() => setLoading(false));
     }
+  }
+
+  const closeModal = () => {
+    setError(null);
+    setSuccess(null);
   }
 
   useEffect(() => {
@@ -61,38 +71,56 @@ export default function RecoveryPassword() {
 
   return (
     <>
-      <div className="container height-100">
-        <div className="d-flex align-items-center row height-100">
-          <div className="col-lg-6">
-            <div className="card card-body card-auth mt-3">
-              <img src="/images/logo-chantier-prive.svg" alt="Logo chantier privé" />
+      <PublicLayout>
 
-              <p className="mt-4">
-                Veuillez ici réinitialiser votre mot de passe :
-              </p>
+        <Modal hidden={!error && !success} closeModal={() => closeModal()}>
+          {error &&
+            <>
+              <p className="text-center">{error}</p>
+              <a className="btn btn-danger btn-block" onClick={() => setError(null)}>Bien compris</a>
+            </>
+          }
 
-              <div className="text-danger">{error && error}</div>
+          {success &&
+            <>
+              <div className="alert alert-success">{success}</div>
+              <Link className="btn btn-success btn-block" to='/connexion'>Bien reçu</Link>
+            </>
+          }
+        </Modal>
 
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Nouveau mot de passe"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Nouveau mot de passe à nouveau"
-                onChange={(e) => setPasswordConfirmation(e.target.value)}
-              />
+        {loading && !requestIsValid && <Loader />}
 
-           
-            </div>
+        {requestIsValid && <>
+
+          <h2>{firstName}, vous pouvez désormais définir votre nouveau mot de passe</h2>
+
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Nouveau mot de passe"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
-          <div className="col-lg-6 pl-5">
+
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Confirmer le nouveau mot de passe"
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+            />
           </div>
-        </div>
-      </div>
+
+          <div className="form-group">
+            <input type="button" className="btn btn-danger btn-block" value="Changer le mot de passe" onClick={() => changePassword()} />
+          </div>
+        </>
+        }
+
+      </PublicLayout>
+
     </>
   );
 }

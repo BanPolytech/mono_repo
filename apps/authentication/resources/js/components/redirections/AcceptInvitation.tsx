@@ -2,24 +2,24 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-function AcceptInvitation() {
-  const { token } = useParams();
+const AcceptInvitation: React.FC = () => {
+  const { email, token } = useParams();
 
-  function validateInvitation(): void {
-    axios.post(`/api/invitation/${token}`).then(({ data }) => {
+  const loadInvitation = () => {
+    axios.post(`/api/invitation/${email}/${token}`).then(({ data }) => {
       if (data.error) {
-        document.location.href = '/login?created=failure';
+        //document.location.href = '/login?created=failure';
       }
 
       if (data.success) {
         // TODO : Change this calling :
-        document.location.href = '/login?created=success';
+        //document.location.href = '/login?created=success';
       }
     });
   }
 
   useEffect(() => {
-    validateInvitation();
+    loadInvitation();
   });
 
   return (

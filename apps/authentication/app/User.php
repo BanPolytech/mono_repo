@@ -2,12 +2,11 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
-use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -17,13 +16,22 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *
  * @package App
  */
-class User extends Eloquent implements AuthenticatableContract, CanResetPasswordContract, JWTSubject
+class User extends Eloquent implements AuthenticatableContract, JWTSubject
 {
     use AuthenticableTrait;
-    use Notifiable;
-    use CanResetPassword;
 
+    /**
+     * The connection used to open the database.
+     *
+     * @var string
+     */
     protected $connection = 'mongodb';
+
+    /**
+     * The collection name.
+     *
+     * @var string
+     */
     protected $collection = 'users';
 
     /**
@@ -35,6 +43,8 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
         'name',
         'email',
         'password',
+        'reset_token',
+        'reset_token_at'
     ];
 
     /**
@@ -43,7 +53,7 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'reset_token'
     ];
 
     /**
@@ -52,50 +62,18 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
 
 
-    /*****************
-     * RELATIONSHIPS *
-     *****************/
-
-    public function projects()
-    {
-        return $this->hasMany(Project::class);
-    }
-
-    public function contacts()
-    {
-        return $this->hasMany(Contact::class);
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class)->withTimestamps();
-    }
-
-    /*****************
-     * ASSIGNMENTS   *
-     *****************/
-
-    public function assignRole($role)
-    {
-        $this->roles()->save($role);
-    }
-
-    /*****************
-     * GATHERING     *
-     *****************/
-
-    public function abilities()
-    {
-        return $this->roles->map->abilities->flatten()->pluck('name')->unique();
-    }
-
-    /****************
-     * AUTH TOKEN   *
-     ****************/
+    /**
+     * The attributes that should cast to native MongoDB dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'reset_token_at'
+    ];
 
     public function getJWTIdentifier()
     {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import axios from 'axios';
 import PublicLayout from '../layouts/PublicLayout';
@@ -25,7 +25,7 @@ export default function Login() {
           return;
         }
 
-        else history.push('/consultation_open');
+        else history.push('/');
       }).finally(() => setLoading(false));
     }
   }
@@ -54,7 +54,7 @@ export default function Login() {
         <div>
           <input type="checkbox" /> Se souvenir de moi
         </div>
-        <b className="text-danger">Mot de passe oublié</b>
+        <Link to="/identifiants-perdus" className="text-danger"><b>Mot de passe oublié</b></Link>
       </div>
 
       <div className="form-group">

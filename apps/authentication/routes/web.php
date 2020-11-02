@@ -11,4 +11,12 @@
 |
 */
 
+Route::get('{path}', function () {
+    if (isset($_COOKIE['access_token'])) {
+        return redirect('/dashboard');
+    }
+
+    return view('layouts.app');
+})->where('path', '(connexion|register|identifiants\-perdus)');
+
 Route::view('{path?}', 'layouts.app')->where('path', '.*');

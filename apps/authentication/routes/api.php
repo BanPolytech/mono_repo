@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\LoginController;
 
@@ -19,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [LoginController::class, 'login']);
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);

@@ -8,7 +8,7 @@ import {
 // Authentication imports
 import Home from './authentication/Home';
 import Login from './authentication/Login';
-import ResetPassword from './authentication/ResetPassword';
+import PasswordLost from './authentication/PasswordLost';
 import RecoveryPassword from './authentication/RecoveryPassword';
 import AcceptInvitation from './redirections/AcceptInvitation';
 import AccessPromotion from "./redirections/AccessPromotion";
@@ -21,10 +21,9 @@ const RoutePath: React.FC = () => {
       <Switch>
         {/* Authentication routes */}
         <Route exact path="/" component={Home} />
-        <Route exact path="/promotion/:token" component={AccessPromotion} />
         <Route exact path="/invitation/:token" component={AcceptInvitation} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/reset-password" component={ResetPassword} />
+        <Route exact path="/connexion" component={Login} />
+        <Route exact path="/identifiants-perdus" component={PasswordLost} />
         <Route exact path="/recovery-password/:token/:email" component={RecoveryPassword} />
 
         {/*

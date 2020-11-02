@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const Dotenv = require('dotenv-webpack');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,5 +12,35 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.react('resources/js/app.js', 'public/js')
+.sass('resources/sass/app.scss', 'public/css')
+.webpackConfig({
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.s[ac]ss?$/,
+        loader: 'sass-loader',
+        exclude: /node_modules/,
+        options: {
+          sourceMap: true,
+        },
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
+  },
+  plugins: [
+    new Dotenv({
+      path: './.env',
+      safe: false,
+      allowEmptyValues: true,
+      systemvars: true,
+    }),
+  ],
+});

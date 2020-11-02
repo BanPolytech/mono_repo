@@ -41,6 +41,8 @@ class ResetPasswordController extends Controller
         return $user;
     }
 
+
+
     /**
      * Get an error if the request is not valid (yet) 
      * or get the first name of the user.

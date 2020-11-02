@@ -11,7 +11,6 @@ import Login from './authentication/Login';
 import PasswordLost from './authentication/PasswordLost';
 import RecoveryPassword from './authentication/RecoveryPassword';
 import AcceptInvitation from './redirections/AcceptInvitation';
-import AccessPromotion from "./redirections/AccessPromotion";
 
 const RoutePath: React.FC = () => {
 

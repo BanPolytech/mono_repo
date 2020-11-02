@@ -1,10 +1,11 @@
 import React, { } from 'react';
+import { Link } from 'react-router-dom';
 
 const PublicLayout: React.FC = (props) => {
   return (
     <div className="background-red-50-right height-100">
 
-      <img src="/images/aos-logo.png" className="logo" />
+      <Link to="/"><img src="/images/aos-logo.png" className="logo" /></Link>
 
       <div className="container height-100">
         <div className="row height-100 d-flex align-items-center">

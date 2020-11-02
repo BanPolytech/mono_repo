@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
@@ -9,11 +9,13 @@ import Modal from '../layouts/Modal';
 export default function Login() {
   const history = useHistory();
   const location = useLocation();
+  const parameters = queryString.parse(location.search);
 
   const [email, setEmail] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
+  const [success, setSuccess] = useState<string>(null);
 
   const logIn = () => {
     if (email && password) {
@@ -30,14 +32,25 @@ export default function Login() {
     }
   }
 
+  const closeModal = () => {
+    history.push('/connexion'); 
+    setSuccess(null);
+  }
+
+  useEffect(() => {
+    if (parameters.welcome) {
+      setSuccess('Bravo ! Vous êtes désormais inscrit(e) sur AOS Force. Vous n\'avez plus qu\'à vous identifier.');
+    }
+  }, [parameters.welcome])
 
   return (
     <PublicLayout>
 
-      <Modal hidden={!error} closeModal={() => setError(null)}>
-        <p className="text-center">{error}</p>
+      <Modal hidden={!error && !success} closeModal={() => setError(null)}>
+        {error && <p className="text-center">{error}</p>}
+        {success && <p className="alert alert-success">{success}</p>}
 
-        <a className="btn btn-danger btn-block" onClick={() => setError(null)}>Bien compris</a>
+        <a className={error ? 'btn btn-danger btn-block' : 'btn btn-success btn-block'} onClick={() => error ? setError(null) : closeModal()}>Bien compris</a>
       </Modal>
 
       <h2>Se connecter</h2>

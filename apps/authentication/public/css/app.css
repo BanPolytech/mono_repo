@@ -10977,6 +10977,7 @@ html,
 .left-panel {
   max-width: 80%;
   width: 100%;
+  margin-left: 10%;
 }
 
 @media (max-width: 991px) {
@@ -10990,6 +10991,7 @@ html,
 
   .left-panel {
     max-width: 100%;
+    margin-left: 0%;
   }
 }
 

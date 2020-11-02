@@ -17,7 +17,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('authenticated')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -30,3 +30,7 @@ Route::post('recovery-password/{email}/{token}', [ResetPasswordController::class
 // Invitation
 Route::get('invitation/{email}/{token}', [InvitationController::class, 'showInvitation']);
 Route::post('invitation/{email}/{token}', [InvitationController::class, 'registerAfterInvitation']);
+
+Route::middleware('authenticated')->group(function () {
+    Route::get('logout', [LoginController::class, 'logout']);
+});

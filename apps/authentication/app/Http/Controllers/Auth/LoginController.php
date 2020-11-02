@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Cookie;
 
@@ -51,19 +52,11 @@ class LoginController extends Controller
      */
     public function logout()
     {
+        auth()->user()->deleteAccessTokenCookie();
+
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
     }
 
     /**
@@ -75,7 +68,7 @@ class LoginController extends Controller
      */
     protected function respondWithToken($token)
     {
-        setcookie('access_token', $token, time() + (auth()->factory()->getTTL() * 60), '/', config('app.sub_domain'), true);
+        User::setAccessTokenCookie($token);
 
         return response()->json([
             'access_token' => $token,

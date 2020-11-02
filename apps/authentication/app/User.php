@@ -3,11 +3,11 @@
 namespace App;
 
 use Carbon\Carbon;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class User
@@ -44,7 +44,10 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
         'email',
         'password',
         'reset_token',
-        'reset_token_at'
+        'reset_token_at',
+        'invitation_token',
+        'invitation_token_at',
+        'invitation_token_by'
     ];
 
     /**
@@ -53,7 +56,7 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'reset_token'
+        'password', 'remember_token', 'reset_token', 'invitation_token'
     ];
 
     /**
@@ -72,8 +75,19 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
      * @var array
      */
     protected $dates = [
-        'reset_token_at'
+        'reset_token_at',
+        'invitation_token_at',
     ];
+
+    /**
+     * Get the user who sent the invitation.
+     *
+     * @return this
+     */
+    public function sentBy()
+    {
+        return self::find($this->invitation_token_by);
+    }
 
     /**
      * Delete field for password resetting.
@@ -104,5 +118,60 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Refresh the access_token of the user for 60 minutes more (if it expires in less than 15 min)
+     *
+     * @return void
+     */
+    public function refreshAccessToken()
+    {
+        $date = Carbon::createFromTimestamp(auth()->payload()['exp']);
+
+        if ($date->diffInMinutes() < 10) {
+            $token = auth()->refresh();
+            self::setAccessTokenCookie($token);
+        }
+    }
+
+    /**
+     * Delete the access_token cookie.
+     *
+     * @return void
+     */
+    public function deleteAccessTokenCookie()
+    {
+        self::setAccessTokenCookie(null, -1);
+    }
+
+    /**
+     * Set the access_token cookie in the browser.
+     *
+     * @param string $token
+     * @return void
+     */
+    public static function setAccessTokenCookie($token, $time = null)
+    {
+        setcookie('access_token', $token, time() + ($time ?? auth()->factory()->getTTL() * 60), '/', config('app.sub_domain'), true);
+    }
+
+    /**
+     * Create an invitation for a new user if there is not yet somebody with this email.
+     *
+     * @param string $email
+     * @return boolean|this
+     */
+    public static function createInvitation($email)
+    {
+        if (self::where('email', $email)->count() > 0) {
+            return false;
+        }
+
+        return self::create([
+            'email' => $email,
+            'invitation_token' => Str::random(90),
+            'invitation_token_at' => now()
+        ]);
     }
 }

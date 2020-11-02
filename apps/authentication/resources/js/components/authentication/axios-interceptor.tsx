@@ -4,7 +4,7 @@ axios.interceptors.response.use(
   (response) => {
     if (response.data.error) {
       if (response.data.error === 999 || response.data.error === 403) {
-        document.location.href = '/login?disconnected=true';
+        document.location.href = '/connexion?disconnected=true';
       }
     }
 

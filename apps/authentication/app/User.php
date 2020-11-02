@@ -153,7 +153,9 @@ class User extends Eloquent implements AuthenticatableContract, JWTSubject
      */
     public static function setAccessTokenCookie($token, $time = null)
     {
-        setcookie('access_token', $token, time() + ($time ?? auth()->factory()->getTTL() * 60), '/', config('app.sub_domain'), true);
+        $time = $time ?? auth()->factory()->getTTL() * 60;
+
+        setcookie('access_token', $token, time() + $time, '/', config('app.sub_domain'), true);
     }
 
     /**

@@ -11,12 +11,22 @@
 |
 */
 
-Route::get('{path}', function () {
+Route::get('/', fn () => redirect('/connexion'));
+
+$authenticationRoutes = function () {
     if (isset($_COOKIE['access_token'])) {
         return redirect('/dashboard');
     }
 
     return view('layouts.app');
-})->where('path', '(connexion|register|identifiants\-perdus)');
+};
 
-Route::view('{path?}', 'layouts.app')->where('path', '.*');
+Route::get('/invitation/{email}/{token}', $authenticationRoutes);
+Route::get('/connexion', $authenticationRoutes);
+Route::get('/identifiants-perdus', $authenticationRoutes);
+Route::get('/reinitialiser-identifiants/{email}/{token}', $authenticationRoutes);
+
+
+Route::group(['middleware' => 'authenticated'], function () {
+    Route::view('{path}', 'layouts.app')->where('path', '.*');
+});

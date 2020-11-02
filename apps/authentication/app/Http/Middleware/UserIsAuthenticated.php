@@ -19,9 +19,9 @@ class UserIsAuthenticated
     {
         $user = null;
 
-        if ($request->cookie('access_token')) {
+        if ($_COOKIE['access_token']) {
             try {
-                $user = auth()->setToken($request->cookie('access_token'))->user();
+                $user = auth()->setToken($_COOKIE['access_token'])->user();
             } catch (\Exception $ex) {
                 return $this->redirect($request);
             }

@@ -37,7 +37,7 @@ class LoginController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['errors' => 'Unauthorized'], 401);
         }
 
@@ -86,7 +86,7 @@ class LoginController extends Controller
      */
     protected function respondWithToken($token)
     {
-        setcookie("access_token", $token, time() + 3600, '/', config('app.sub_domain'), true);
+        setcookie("access_token", $token, time() + 3600, '/', env('APP_SUB_DOMAIN', 'aosforce.com'), true);
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

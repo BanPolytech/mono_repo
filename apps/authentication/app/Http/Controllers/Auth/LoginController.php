@@ -1,23 +1,14 @@
 <?php
 
-namespace AOSForceMonoRepo\Authentication\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     /**
      * Create a new AuthController instance.
      *
@@ -25,7 +16,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'logout']]);
     }
 
     /**
@@ -38,7 +29,7 @@ class LoginController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['errors' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Identifiants invalides']);
         }
 
         return $this->respondWithToken($token);
@@ -61,20 +52,11 @@ class LoginController extends Controller
      */
     public function logout()
     {
-        Log::error('logout');
+        auth()->user()->deleteAccessTokenCookie();
+
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
     }
 
     /**
@@ -86,12 +68,12 @@ class LoginController extends Controller
      */
     protected function respondWithToken($token)
     {
-        setcookie("access_token", $token, time() + 3600, '/', env('APP_SUB_DOMAIN', 'aosforce.com'), true);
+        User::setAccessTokenCookie($token);
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
 }

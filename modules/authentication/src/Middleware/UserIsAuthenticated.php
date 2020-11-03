@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace AOSForceMonoRepo\Authentication\Middleware;
 
-use App\Constants;
-use App\User;
 use Closure;
 
 class UserIsAuthenticated
@@ -19,7 +17,7 @@ class UserIsAuthenticated
     {
         $user = null;
 
-        if ($_COOKIE['access_token']) {
+        if (isset($_COOKIE['access_token'])) {
             try {
                 $user = auth()->setToken($_COOKIE['access_token'])->user();
             } catch (\Exception $ex) {

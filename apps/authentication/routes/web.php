@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/', fn () => redirect('/connexion'));
+
+//Route::get('/', fn () => redirect('/connexion'));
 
 $authenticationRoutes = function () {
     if (isset($_COOKIE['access_token'])) {
@@ -21,6 +22,7 @@ $authenticationRoutes = function () {
     return view('layouts.app');
 };
 
+Route::get('/', fn () => redirect('/connexion'));
 Route::get('/invitation/{email}/{token}', $authenticationRoutes);
 Route::get('/connexion', $authenticationRoutes);
 Route::get('/identifiants-perdus', $authenticationRoutes);

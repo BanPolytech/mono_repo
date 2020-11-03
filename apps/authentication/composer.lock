@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c187215280a6d96de0e9e1c829a67e4f",
+    "content-hash": "454ff45bd4c5ae707d57c4825530df30",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5019,6 +5019,48 @@
             "time": "2020-08-11T18:10:13+00:00"
         },
         {
+            "name": "modules/authentication",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../modules/authentication",
+                "reference": "8f30471579e9474cabff42410b414b69b7c88674"
+            },
+            "require": {
+                "ext-mongodb": "*",
+                "jenssegers/mongodb": "^3.6",
+                "laravel/framework": ">=6",
+                "mongodb/mongodb": "^1.7",
+                "php": ">=7.1.3",
+                "tymon/jwt-auth": "^1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AOSForceMonoRepo\\Authentication\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cyril Besseyre",
+                    "email": "cyril.besseyre@go-aos.io",
+                    "homepage": "https://github.com/Baiquette"
+                }
+            ],
+            "description": "An authentication repository for Laravel 6.X",
+            "homepage": "https://github.com/go-aos/aos-force-mono-repo/modules/authentication",
+            "keywords": [
+                "framework",
+                "laravel"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "myclabs/deep-copy",
             "version": "1.10.1",
             "source": {
@@ -7062,7 +7104,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "modules/authentication": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

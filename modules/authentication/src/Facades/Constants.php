@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace AOSForceMonoRepo\Authentication\Facades;
 
 class Constants
 {

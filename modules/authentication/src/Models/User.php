@@ -117,7 +117,7 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
     {
         $time = $time ?? auth()->factory()->getTTL() * 60;
 
-        setcookie('access_token', $token, time() + $time, '/', config('app.sub_domain'), true);
+        setcookie('access_token', $token, time() + $time, '/', env('APP_SUB_DOMAIN', 'aosforce.com'), true);
     }
 
 

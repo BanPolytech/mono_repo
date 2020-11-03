@@ -57,6 +57,38 @@ DB_DATABASE=contract_manager
 APP_SUB_DOMAIN=local.test
 ```
 
+
+Then, create a app/User.php by using the following structure:
+```php
+<?php
+use Illuminate\Support\Str;
+use AOSForceMonoRepo\Authentication\Models\User as AOSForceUser;
+/**
+ * Class User
+ *
+ * @mixin Builder
+ *
+ * @package App
+ */
+class User extends AOSForceUser
+{
+    /// Your code...
+}
+?>
+``` 
+
+In the app/Http/Kernel.php file, use the `UserIsAuthenticated` middleware if the route called must be accessible only for users already connected:
+```php
+<?php
+// The Kernel file...
+'your-middleware-alias' => [
+    \AOSForceMonoRepo\Authentication\Middleware\UserIsAuthenticated::class
+]
+>
+```
+
+Finally, just start the `composer u`, even if you already started `composer i`.
+
 Enjoy :-)
 
 ## Screenshots

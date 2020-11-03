@@ -11,10 +11,6 @@
 |
 */
 
-use AOSForceMonoRepo\Authentication\Facades\Authenticate;
-
-Route::get('/', fn () => new Authenticate());
-
 $authenticationRoutes = function () {
     if (isset($_COOKIE['access_token'])) {
         return redirect('/dashboard');
@@ -23,6 +19,7 @@ $authenticationRoutes = function () {
     return view('layouts.app');
 };
 
+Route::get('/', fn () => redirect('/connexion'));
 Route::get('/invitation/{email}/{token}', $authenticationRoutes);
 Route::get('/connexion', $authenticationRoutes);
 Route::get('/identifiants-perdus', $authenticationRoutes);

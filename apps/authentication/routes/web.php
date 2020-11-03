@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/', fn () => redirect('/connexion'));
+use AOSForceMonoRepo\Authentication\Facades\Authenticate;
+
+Route::get('/', fn () => new Authenticate());
 
 $authenticationRoutes = function () {
     if (isset($_COOKIE['access_token'])) {

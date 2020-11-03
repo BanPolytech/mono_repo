@@ -3,7 +3,6 @@
 	"type": "library",
 	"description": "An authentication repository for Laravel 6.X",
 	"minimum-stability": "dev",
-	"composer/installers": "~1.0",
 	"keywords": [
 		"framework",
 		"laravel"
@@ -22,7 +21,7 @@
 		"laravel/framework": ">=6",
 		"ext-mongodb": "*",
 		"mongodb/mongodb": "^1.7",
-		"jenssegers/mongodb": "^3.7",
+		"jenssegers/mongodb": "^3.6",
 		"tymon/jwt-auth": "^1.0.0"
 	},
 	"autoload": {

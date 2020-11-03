@@ -2,6 +2,7 @@
 
 namespace AOSForceMonoRepo\Authentication\Middleware;
 
+use AOSForceMonoRepo\Authentication\Facades\Constants;
 use Closure;
 
 class UserIsAuthenticated

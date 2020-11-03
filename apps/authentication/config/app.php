@@ -56,8 +56,6 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
-    'sub_domain' => env('APP_SUB_DOMAIN', 'aosforce.com'),
-
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

@@ -35,7 +35,6 @@ class User extends AOSForceUser
         $this->unset('reset_token_at');
     }
 
-
     /**
      * Create an invitation for a new user if there is not yet somebody with this email.
      *

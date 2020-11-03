@@ -11,9 +11,6 @@
 |
 */
 
-
-//Route::get('/', fn () => redirect('/connexion'));
-
 $authenticationRoutes = function () {
     if (isset($_COOKIE['access_token'])) {
         return redirect('/dashboard');

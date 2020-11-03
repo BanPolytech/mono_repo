@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Support\Str;
-use AOSForceMonoRepo\Authentication\Traits\UserAccess;
 use AOSForceMonoRepo\Authentication\Models\User as AOSForceUser;
 
 /**
@@ -15,8 +14,6 @@ use AOSForceMonoRepo\Authentication\Models\User as AOSForceUser;
  */
 class User extends AOSForceUser
 {
-    use UserAccess;
-
     /**
      * Get the user who sent the invitation.
      *

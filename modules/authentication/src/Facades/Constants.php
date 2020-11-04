@@ -4,5 +4,5 @@ namespace AOSForceMonoRepo\Authentication\Facades;
 
 class Constants
 {
-    const DISCONNECTED = 999,
+    const DISCONNECTED = 999;
 }

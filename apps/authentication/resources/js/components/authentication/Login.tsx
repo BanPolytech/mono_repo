@@ -27,7 +27,7 @@ export default function Login() {
           return;
         }
 
-        else history.push('/');
+        else history.push('/dashboard');
       }).finally(() => setLoading(false));
     }
   }

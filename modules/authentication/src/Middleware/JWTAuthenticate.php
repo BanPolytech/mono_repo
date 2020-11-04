@@ -2,13 +2,11 @@
 
 namespace AOSForceMonoRepo\Authentication\Middleware;
 
-use App\Models\User;
+use AOSForceMonoRepo\Authentication\Facades\Constants;
+use AOSForceMonoRepo\Authentication\Models\User;
 use Closure;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Session\TokenMismatchException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -25,38 +23,37 @@ class JWTAuthenticate
      */
     public function handle(Request $request, Closure $next)
     {
-        // caching the next action
-        $response = $next($request);
-
         try {
-            if (!$request->cookies->has('XSRF-TOKEN')) {
-                throw new TokenMismatchException();
-            }
-//            $rawToken = $_COOKIE['access_token'];
-            $rawToken = $_COOKIE['access_token'];
-            $token = new Token($rawToken);
+            // Decode the token
+            $token = new Token($_COOKIE['access_token']);
             $payload = JWTAuth::decode($token);
+
+            // Get the user from the token decoded.
             $user = User::findOrfail($payload->get('sub'));
             auth()->login($user);
+
+            $user->refreshAccessToken($payload);
+            return $next($request);
         } catch (Exception $e) {
-            if ($e instanceof TokenExpiredException) {
-                // If the token is expired, then it will be refreshed and added to the headers
-                try {
-                    $refreshed = JWTAuth::refresh(JWTAuth::getToken());
-                    $user = JWTAuth::setToken($refreshed)->toUser();
-                    // TODO : set cookie with refreshed token
-                    auth()->login($user);
-                } catch (JWTException $e) {
-                    return response()->json([
-                        'code' => 103, // means not refreshable
-                        'response' => null // nothing to show
-                    ]);
-                }
-            } else {
-                return response('Unauthorized', 401);
-            }
         }
 
-        return $next($request);
+        return $this->redirectUser($request);
+    }
+
+    /**
+     * Redirect the user or returns a JSON if the authentication failed.
+     *
+     * @param Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    protected function redirectUser($request)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'code' => Constants::DISCONNECTED
+            ]);
+        }
+
+        return redirect(env('URL_AUTHENTICATION_PORTAL', 'https://account.aosforce.com/'));
     }
 }

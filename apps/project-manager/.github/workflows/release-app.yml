@@ -1,0 +1,173 @@
+name: Build & Publish
+
+on:
+  push:
+    branches:
+      - production
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  AWS_ECR: "331119895840.dkr.ecr.eu-west-3.amazonaws.com"
+  GIT_PROJECT: "aosforce"
+
+jobs:
+
+  # Slack build start notification job
+  slack-build-start:
+    name: Slack - Build Start
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Slack - Start notification
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        custom_payload: |
+          {
+            text: "Github Actions - Build started :rocket:",
+            attachments: [
+              {
+                fallback: 'fallback',
+                color: '#235668',
+                title: '${{ env.GIT_PROJECT }}',
+                text: '',
+                fields: [
+                  {
+                    title: '',
+                    value: 'Triggered by : <https://github.com/${{ github.actor }}|${{ github.actor }}> \n Commit : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}|' + '${{ github.sha }}'.slice(0, 8) + '> \n Branch : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/tree/${{ github.ref }}|' + '${{ github.ref }}'.split('/').pop() + '> \n <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}/checks|See build progress>',
+                    short: false
+                  }
+                ],
+              actions: [{
+              }]
+            }]
+          }
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  build-and-publish:
+    name: Setup, Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.PRODUCTION_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PRODUCTION_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1          
+
+      - name: Install dependencies
+        run: |
+          composer install --ignore-platform-reqs
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Compile assets
+        run: npm run prod
+
+      # Build the Docker image
+      - name: Build
+        run: |
+          docker build -t ${{ env.AWS_ECR }}/aosforce/app:"${GITHUB_REF##*/}"-"${GITHUB_SHA::8}" .
+
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |
+          docker push ${{ env.AWS_ECR }}/aosforce/app:"${GITHUB_REF##*/}"-"${GITHUB_SHA::8}"
+
+  # Slack notification job based on pipeline result
+  slack-notification:
+    name: Slack - Final notification
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Github Actions - Retrieve conclusion state
+        uses: technote-space/workflow-conclusion-action@v1
+
+      - name: Slack - Notify on failure
+        uses: 8398a7/action-slack@v3
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: "Github Actions - Build ${{ env.WORKFLOW_CONCLUSION }} :broken_heart:",
+              attachments: [{
+                fallback: 'fallback',
+                color: '#FF0000',
+                title: '${{ env.GIT_PROJECT }}',
+                text: '',
+                fields: [{
+                  title: '',
+                  value: 'Triggered by : <https://github.com/${{ github.actor }}|${{ github.actor }}> \n Commit : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}|' + '${{ github.sha }}'.slice(0, 8) + '> \n Branch : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/tree/${{ github.ref }}|' + '${{ github.ref }}'.split('/').pop() + '> \n <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}/checks|See build progress>',
+                  short: true
+                }],
+                actions: [{
+                }]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack - Notify on success
+        uses: 8398a7/action-slack@v3
+        if: env.WORKFLOW_CONCLUSION == 'success'
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: "Github Actions - Build ${{ env.WORKFLOW_CONCLUSION }} :heavy_check_mark:",
+              attachments: [{
+                fallback: 'fallback',
+                color: '#008000',
+                title: '${{ env.GIT_PROJECT }}',
+                text: '',
+                fields: [{
+                  title: '',
+                  value: 'Triggered by : <https://github.com/${{ github.actor }}|${{ github.actor }}> \n Commit : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}|' + '${{ github.sha }}'.slice(0, 8) + '> \n Branch : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/tree/${{ github.ref }}|' + '${{ github.ref }}'.split('/').pop() + '> \n <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}/checks|See build progress>',
+                  short: true
+                }],
+                actions: [{
+                }]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack - Notify on cancelled
+        uses: 8398a7/action-slack@v3
+        if: env.WORKFLOW_CONCLUSION == 'cancelled'
+        with:
+          status: custom
+          custom_payload: |
+            {
+              text: "Github Actions - Build ${{ env.WORKFLOW_CONCLUSION }} :chicken:",
+              attachments: [{
+                fallback: 'fallback',
+                color: '#D3D3D3',
+                title: '${{ env.GIT_PROJECT }}',
+                text: '',
+                fields: [{
+                  title: '',
+                  value: 'Triggered by : <https://github.com/${{ github.actor }}|${{ github.actor }}> \n Commit : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}|' + '${{ github.sha }}'.slice(0, 8) + '> \n Branch : <https://github.com/go-aos/${{ env.GIT_PROJECT}}/tree/${{ github.ref }}|' + '${{ github.ref }}'.split('/').pop() + '> \n <https://github.com/go-aos/${{ env.GIT_PROJECT}}/commit/${{ github.sha }}/checks|See build progress>',
+                  short: true
+                }],
+                actions: [{
+                }]
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

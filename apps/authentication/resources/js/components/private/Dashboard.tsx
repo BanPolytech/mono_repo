@@ -11,7 +11,7 @@ const Dashboard: React.FC = () => {
 
         <div className="row justify-content-center">
           <div className="col-md-4">
-            <Link to="#">
+            <Link to="">
             <div className="card">
               <div className="card-header">Leads Finder</div>
               <div className="card-body text-center">
@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
 
 
           <div className="col-md-4">
-            <Link to="#">
+            <a href={window.localStorage.getItem('project_manager')}>
             <div className="card">
               <div className="card-header">Project Manager</div>
               <div className="card-body text-center">
@@ -36,12 +36,12 @@ const Dashboard: React.FC = () => {
                 Accéder à Project Manager
               </div>
             </div>
-            </Link>
+            </a>
           </div>
 
 
           <div className="col-md-4">
-            <Link to="#">
+          <a href={window.localStorage.getItem('contracts_manager')}>
             <div className="card">
               <div className="card-header">Contract Manager</div>
               <div className="card-body text-center">
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
                 Accéder à Contract Manager
               </div>
             </div>
-            </Link>
+            </a>
           </div>
         </div>
       </PrivateLayout>

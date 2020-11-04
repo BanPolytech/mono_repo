@@ -59,7 +59,7 @@ return [
     'domains' => [
         'project_manager' => env('APP_DOMAINS_PROJECT_MANAGER', 'https://app.aosforce.com'),
 
-        'contracts_manager' => env('APP_DOMAINS_PROJECT_MANAGER', 'https://contracts-manager.aosforce.com'),
+        'contracts_manager' => env('APP_DOMAINS_CONTRACTS_MANAGER', 'https://contracts-manager.aosforce.com'),
     ],
 
     /*

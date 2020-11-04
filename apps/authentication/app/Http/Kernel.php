@@ -43,7 +43,7 @@ class Kernel extends HttpKernel
         ],
 
         'authenticated' => [
-            \AOSForceMonoRepo\Authentication\Middleware\UserIsAuthenticated::class
+            \AOSForceMonoRepo\Authentication\Middleware\JWTAuthenticate::class
         ]
     ];
 

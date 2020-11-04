@@ -56,6 +56,12 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'domains' => [
+        'project_manager' => env('APP_DOMAINS_PROJECT_MANAGER', 'https://app.aosforce.com'),
+
+        'contracts_manager' => env('APP_DOMAINS_CONTRACTS_MANAGER', 'https://contracts-manager.aosforce.com'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

@@ -25,9 +25,12 @@ export default function Login() {
         if (data.error) {
           setError(data.error);
           return;
+        } else {
+          window.localStorage.setItem('project_manager', data.domains.project_manager);
+          window.localStorage.setItem('contracts_manager', data.domains.contracts_manager);
+          
+          history.push('/dashboard');
         }
-
-        else history.push('/');
       }).finally(() => setLoading(false));
     }
   }

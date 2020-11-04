@@ -29,9 +29,11 @@ class JWTAuthenticate
         $response = $next($request);
 
         try {
-            if (!$request->cookies->has('XSRF-TOKEN')) throw new TokenMismatchException();
+            if (!$request->cookies->has('XSRF-TOKEN')) {
+                throw new TokenMismatchException();
+            }
 //            $rawToken = $_COOKIE['access_token'];
-            $rawToken = $request->cookie('access_token');
+            $rawToken = $_COOKIE['access_token'];
             $token = new Token($rawToken);
             $payload = JWTAuth::decode($token);
             $user = User::findOrfail($payload->get('sub'));

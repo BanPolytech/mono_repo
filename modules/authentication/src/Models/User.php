@@ -91,10 +91,10 @@ class User extends Eloquent implements AuthenticatableContract, CanResetPassword
     {
         $date = Carbon::createFromTimestamp(auth()->payload()['exp']);
 
-        if ($date->diffInMinutes() < 10) {
-            $token = auth()->refresh();
-            self::setAccessTokenCookie($token);
-        }
+        // if ($date->diffInMinutes() < 10) {
+        $token = auth()->refresh();
+        self::setAccessTokenCookie($token);
+        // }
     }
 
     /**

@@ -28,7 +28,8 @@ export default function Login() {
         } else {
           window.localStorage.setItem('project_manager', data.domains.project_manager);
           window.localStorage.setItem('contracts_manager', data.domains.contracts_manager);
-          
+          window.localStorage.setItem('user', JSON.stringify(data.user));
+
           history.push('/dashboard');
         }
       }).finally(() => setLoading(false));
@@ -36,7 +37,7 @@ export default function Login() {
   }
 
   const closeModal = () => {
-    history.push('/connexion'); 
+    history.push('/connexion');
     setSuccess(null);
   }
 

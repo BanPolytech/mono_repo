@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "454ff45bd4c5ae707d57c4825530df30",
+    "content-hash": "243681171f5d10d57d13927e1b372f95",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -4769,7 +4769,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../modules/authentication",
-                "reference": "8f30471579e9474cabff42410b414b69b7c88674"
+                "reference": "85029ac1cfd1efe09303a4b98d577b96574c4cce"
             },
             "require": {
                 "ext-mongodb": "*",
@@ -6723,7 +6723,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2.5|^8.0"
+        "php": "^7.2.5|^8.0",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "1.1.0"

@@ -3,7 +3,7 @@
 namespace AOSForceMonoRepo\Authentication\Middleware;
 
 use AOSForceMonoRepo\Authentication\Facades\Constants;
-use App\Models\User;
+use AOSForceMonoRepo\Authentication\Models\User;
 use Closure;
 
 class UserIsAuthenticated
@@ -22,9 +22,9 @@ class UserIsAuthenticated
         if (isset($_COOKIE['access_token'])) {
             try {
                 $user = auth()->setToken($_COOKIE['access_token'])->user();
-                dd(User::first());
+//                dd(User::first());
             } catch (\Exception $ex) {
-                dd($ex->getMessage());
+//                dd($ex->getMessage());
                 return $this->redirect($request);
             }
         }
@@ -35,7 +35,7 @@ class UserIsAuthenticated
             return $next($request);
         }
 
-        dd('fail');
+//        dd('fail');
 
         return $this->redirect($request);
     }

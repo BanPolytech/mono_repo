@@ -112,6 +112,13 @@ Finally, just start the `composer u`, even if you already started `composer i`.
 Enjoy :-)
 
 ## Screenshots
+|                  Login                  |             Password Lost            |               Reset Link                    |             New Password            |
+| :-------------------------------------: | :----------------------------------: | :-----------------------------------------: | :---------------------------------: |
+| ![Screen0](images/login.png)            | ![Screen1](images/password-lost.png) | ![Screen2](images/reset-link-sent.png)      | ![Screen3](images/new-password.png) |
+
+|             Password Updated            |            Invitation                |             Invitation Completed            |            Dashboard                |
+| :-------------------------------------: | :----------------------------------: | :-----------------------------------------: | :---------------------------------: |
+| ![Screen4](images/password-updated.png) | ![Screen5](images/invitation.png)    | ![Screen4](images/invitation-completed.png) | ![Screen5](images/dashboard.png)    |
 
 ![](images/login.png)
 ![](images/password-lost.png)

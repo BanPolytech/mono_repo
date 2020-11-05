@@ -38,6 +38,26 @@ valet park
 ``` 
 It will define the repository as "root directory" for Laravel Valet.
 
+You need to follow the instructions here : https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
+Inside the config/auth.php file you will need to make a few changes to configure Laravel to use the jwt guard to power your application authentication.
+
+Make the following changes to the file:
+```
+'defaults' => [
+    'guard' => 'api',
+    'passwords' => 'users',
+],
+
+...
+
+'guards' => [
+    'api' => [
+        'driver' => 'jwt',
+        'provider' => 'users',
+    ],
+],
+```
+
 Then, edit the `.env` file and add the following constants:
 ```
 # Security for cookies

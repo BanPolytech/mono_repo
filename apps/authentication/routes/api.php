@@ -33,4 +33,5 @@ Route::post('invitation/{email}/{token}', [InvitationController::class, 'registe
 
 Route::middleware('authenticated')->group(function () {
     Route::get('logout', [LoginController::class, 'logout']);
+//    Route::get('user', [LoginController::class, 'me']);
 });

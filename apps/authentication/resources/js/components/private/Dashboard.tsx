@@ -4,10 +4,12 @@ import PrivateLayout from '../layouts/PrivateLayout';
 
 const Dashboard: React.FC = () => {
 
+    const user = JSON.parse(window.localStorage.getItem('user'));
+
   return (
     <>
       <PrivateLayout>
-        <h2 className="text-center">Bienvenue sur AOS Force</h2>
+        <h2 className="text-center">Bienvenue {user.name} sur AOS Force</h2>
 
         <div className="row justify-content-center">
           <div className="col-md-4">
